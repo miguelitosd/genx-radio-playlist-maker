@@ -5,6 +5,8 @@ Takes positions 1..TOP (default 40) from every weekly chart between the given
 years, de-duplicates songs (same title + artist), and orders them by the date
 they first entered the Top 40.
 
+Album names come from albums/albums.json (see lookup_albums.py) when present.
+
 Usage: build_plif.py [--top 40] [--start 1976] [--end 2005]
                      [--caption "GenX Radio"] [--description "..."] [-o genx-radio.plif]
 """
@@ -20,6 +22,13 @@ def clean(s):
 def song_title(t):
     # drop site annotations like "[re-release]"
     return re.sub(r'\s*\[[^\]]*\]', '', t).strip()
+
+ASCII = str.maketrans({'\u2018': "'", '\u2019': "'", '\u201c': '"', '\u201d': '"',
+                       '\u2010': '-', '\u2011': '-', '\u2013': '-', '\u2014': '-', '\u2026': '...'})
+
+def load_albums(base):
+    f = base / 'albums' / 'albums.json'
+    return json.loads(f.read_text(encoding='utf-8')) if f.exists() else {}
 
 def key(title, artist):
     # compare on the lead artist only, so "X" and "X ft. Y" for the same title collapse
@@ -47,6 +56,7 @@ def main():
     base = Path(__file__).resolve().parent
     files = sorted(p for p in (base / 'charts').glob('[12][0-9][0-9][0-9]-*.html')
                    if args.start <= int(p.name[:4]) <= args.end)
+    albums = load_albums(base)
     seen, rows, empty = set(), [], []
     for f in files:
         entries = parse(f, args.top)
@@ -57,7 +67,8 @@ def main():
             if k in seen:
                 continue
             seen.add(k)
-            rows.append({"identifiers": {}, "album": "", "name": title, "artist": artist})
+            album = albums.get(f'{title}\t{artist}', {}).get('album', '').translate(ASCII)
+            rows.append({"identifiers": {}, "album": album, "name": title, "artist": artist})
 
     plif = {
         "playlists": [{
@@ -75,7 +86,8 @@ def main():
     }
     out = base / args.output
     out.write_text(json.dumps(plif, indent=2, ensure_ascii=False) + '\n', encoding='utf-8')
-    print(f'{len(files)} charts, {len(rows)} unique songs -> {out}')
+    print(f'{len(files)} charts, {len(rows)} unique songs, '
+          f'{sum(1 for r in rows if r["album"])} with albums -> {out}')
     if empty:
         print(f'WARNING: {len(empty)} charts had fewer than {args.top} rows: ' + ', '.join(empty[:20]), file=sys.stderr)
 

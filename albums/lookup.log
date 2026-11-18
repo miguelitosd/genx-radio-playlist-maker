@@ -1,0 +1,83 @@
+5571 songs to look up (16 cached)
+100/5571
+200/5571
+300/5571
+400/5571
+Traceback (most recent call last):
+  File "lookup_albums.py", line 220, in <module>
+    main()
+    ~~~~^^
+  File "lookup_albums.py", line 196, in main
+    q, cands = search(r['name'], r['artist'])
+               ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "lookup_albums.py", line 120, in search
+    cands = candidates(mb_query(q), title, artist)
+                       ~~~~~~~~^^^
+  File "lookup_albums.py", line 77, in mb_query
+    raise RuntimeError(f'MusicBrainz kept failing for: {q}')
+RuntimeError: MusicBrainz kept failing for: recording:"Can We Still Be Friends" AND artist:"Todd Rundgren" AND status:official
+5115 songs to look up (472 cached)
+100/5115
+200/5115
+300/5115
+400/5115
+500/5115
+600/5115
+700/5115
+800/5115
+900/5115
+1000/5115
+1100/5115
+1200/5115
+1300/5115
+1400/5115
+1500/5115
+1600/5115
+1700/5115
+1800/5115
+1900/5115
+2000/5115
+2100/5115
+2200/5115
+2300/5115
+2400/5115
+2500/5115
+2600/5115
+2700/5115
+2800/5115
+2900/5115
+3000/5115
+3100/5115
+3200/5115
+3300/5115
+3400/5115
+3500/5115
+3600/5115
+3700/5115
+3800/5115
+3900/5115
+4000/5115
+--- restarted 2026-11-17 21:36:40 with ETA output ---
+1063 songs to look up (4524 cached)
+2026-11-17 21:41:20  100/1063  last 100 took 4m34s  963 left  ETA 44m01s (~22:25)
+2026-11-17 21:46:39  200/1063  last 100 took 5m18s  863 left  ETA 45m47s (~22:32)
+2026-11-17 21:51:55  300/1063  last 100 took 5m16s  763 left  ETA 40m14s (~22:32)
+2026-11-17 21:57:05  400/1063  last 100 took 5m09s  663 left  ETA 34m11s (~22:31)
+2026-11-17 22:02:21  500/1063  last 100 took 5m16s  563 left  ETA 29m40s (~22:32)
+2026-11-17 22:08:42  600/1063  last 100 took 6m20s  463 left  ETA 29m21s (~22:38)
+2026-11-17 22:14:58  700/1063  last 100 took 6m16s  363 left  ETA 22m45s (~22:37)
+2026-11-17 22:20:16  800/1063  last 100 took 5m18s  263 left  ETA 13m57s (~22:34)
+2026-11-17 22:24:58  900/1063  last 100 took 4m41s  163 left  ETA 7m39s (~22:32)
+2026-11-17 22:29:49  1000/1063  last 100 took 4m51s  63 left  ETA 3m03s (~22:32)
+albums: {'musicbrainz': 5414, 'fallback': 23, 'none': 150} -> albums/albums.json
+1535 charts, 5587 unique songs, 5437 with albums -> genx-radio.plif
+--- re-fetch of songs with no album 2026-11-17 22:33:12 ---
+150 songs to look up (5437 cached)
+2026-11-17 22:39:44  100/150  last 100 took 6m31s  50 left  ETA 3m15s (~22:43)
+albums: {'musicbrainz': 5436, 'fallback': 23, 'none': 128} -> albums/albums.json
+1535 charts, 5587 unique songs, 5459 with albums -> genx-radio.plif
+--- re-fetch with improved search 2026-11-17 22:46:53 ---
+121 songs to look up (5466 cached)
+2026-11-17 22:56:55  100/121  last 100 took 10m01s  21 left  ETA 2m06s (~22:59)
+albums: {'musicbrainz': 5500, 'fallback': 23, 'none': 64} -> albums/albums.json
+1535 charts, 5587 unique songs, 5523 with albums -> genx-radio.plif
