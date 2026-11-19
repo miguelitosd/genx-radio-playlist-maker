@@ -63,6 +63,7 @@ Step 3 needs the song list from step 2, so the first time through you run
 
 ```
 build_plif.py [--top 40] [--start 1976] [--end 2005] [--min-points 0]
+              [--scores | --allscores]
               [--caption "GenX Radio"] [--description "..."] [-o genx-radio.plif]
 ```
 
@@ -88,6 +89,15 @@ build_plif.py [--top 40] [--start 1976] [--end 2005] [--min-points 0]
   has nothing earlier), songs already charting by then are scored only on
   their weeks from that date on; songs still charting at the end of 2005 are
   likewise cut short.
+- **Scores (`--scores`, `--allscores`):** used with `--min-points`, these
+  print songs and their scores to stdout as tab-separated `score`, `song`,
+  `artist`, `album`, highest score first. `--scores` lists only the kept
+  songs; `--allscores` lists every song, with a
+  `# ---- below N points: left out of the playlist ----` line where the cutoff
+  falls. The summary lines go to stderr instead, so stdout is clean TSV:
+  `build_plif.py --min-points 300 --scores > scores.tsv`.
+- **Playlist name (`--caption`, `--description`):** `--caption` is the
+  playlist's name; `--description` is the longer text shown under it.
 - **Albums:** looked up in `albums/albums.json` by the exact `title\tartist`
   key. Curly quotes, special dashes and `…` are converted to plain ASCII.
 - Prints a warning if any chart had fewer rows than `--top`, which usually
