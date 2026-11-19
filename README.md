@@ -62,7 +62,7 @@ Step 3 needs the song list from step 2, so the first time through you run
 ## `build_plif.py` in detail
 
 ```
-build_plif.py [--top 40] [--start 1976] [--end 2005]
+build_plif.py [--top 40] [--start 1976] [--end 2005] [--min-points 0]
               [--caption "GenX Radio"] [--description "..."] [-o genx-radio.plif]
 ```
 
@@ -77,6 +77,17 @@ build_plif.py [--top 40] [--start 1976] [--end 2005]
   lead artist is the name before `&`, `and`, `feat.`, `with`, `x`, `vs.`, or a
   comma, so "X" and "X ft. Y" with the same title count as one song. Only the
   first appearance is kept.
+- **Typos:** `TITLE_TYPOS` / `ARTIST_TYPOS` list misspellings in the chart
+  data (for example `Suvivor`). They're only used when matching, so a typo'd
+  week counts toward the correctly spelled song, and the playlist shows the
+  correct spelling.
+- **Weighting (`--min-points N`):** each week a song spends on the chart earns
+  `TOP + 1 - position` points (#1 = 40 … #40 = 1). Only songs totalling at
+  least `N` points are kept, still in first-charted order. `--min-points 100`
+  keeps 3,624 of 5,581 songs. Because the charts start on 1976-08-07 (the site
+  has nothing earlier), songs already charting by then are scored only on
+  their weeks from that date on; songs still charting at the end of 2005 are
+  likewise cut short.
 - **Albums:** looked up in `albums/albums.json` by the exact `title\tartist`
   key. Curly quotes, special dashes and `…` are converted to plain ASCII.
 - Prints a warning if any chart had fewer rows than `--top`, which usually
