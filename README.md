@@ -53,6 +53,7 @@ Step 3 needs the song list from step 2, so the first time through you run
 | `charts/index/YYYY.html` | The yearly index pages that list each week's chart date. |
 | `fetch.log` | Output from the chart download run (`<date> ok` per week, `FAIL` lines on errors). |
 | `build_plif.py` | Turns the saved charts into the playlist (details below). |
+| `search_charts.py` | Looks up a song or artist in the saved charts and shows each week it charted and its position (details below). Not part of the pipeline; it's for checking the data. |
 | `genx-radio.plif` | **The output**: a Playlisty import file in JSON format, with one row per song (`name`, `artist`, `album`). |
 | `lookup_albums.py` | Finds each song's original album on MusicBrainz (details below). |
 | `albums/mb_cache.jsonl` | Cache of MusicBrainz results, one JSON line per song: the queries sent and the matching release groups that came back. Songs already in the cache are never looked up again. |
@@ -102,6 +103,45 @@ build_plif.py [--top 40] [--start 1976] [--end 2005] [--min-points 0]
   key. Curly quotes, special dashes and `…` are converted to plain ASCII.
 - Prints a warning if any chart had fewer rows than `--top`, which usually
   means a page didn't download completely.
+
+## `search_charts.py` in detail
+
+```
+search_charts.py [--song TEXT] [--artist TEXT] [--top 50] [--score N]
+                 [--start 1976] [--end 2005]
+```
+
+Searches the saved charts for a song and/or artist. It's handy for checking
+why a song did or didn't make the playlist, or what score it gets with
+`--min-points`.
+
+- **Matching:** `--song` and `--artist` are case-insensitive substrings, so
+  `--song love` finds every title containing "love". Give either or both;
+  with both, an entry must match both. Typos in the chart data are corrected
+  first (the same `TITLE_TYPOS` / `ARTIST_TYPOS` as `build_plif.py`), so
+  `--artist survivor` also finds the `Suvivor` weeks.
+- **Grouping:** entries are grouped into songs by the same rule
+  `build_plif.py` uses to remove duplicates (title + lead artist). Each song
+  shows its number of weeks, its peak position, and every chart file it
+  appears in with its position that week.
+- **Positions (`--top`):** by default all 50 positions on each chart are
+  searched. Use `--top 40` to see only what `build_plif.py` sees.
+- **Scores (`--score N`):** adds a score the same way `--min-points` counts
+  it with `--top N`: `N + 1 - position` points per week in the top N, and
+  nothing for weeks below #N. `--score 40` matches `build_plif.py`'s default.
+- **Years (`--start`, `--end`):** limits the search to charts in those years.
+
+Example:
+
+```
+$ ./search_charts.py --song "eye of the tiger" --score 40
+Eye Of The Tiger - Survivor: 19 weeks, peak #1, score 642
+  1982-06-19.html	#42	0 pts
+  1982-06-26.html	#19	22 pts
+  1982-07-03.html	#9	32 pts
+  ...
+1 songs, 19 chart entries
+```
 
 ## `lookup_albums.py` in detail
 
